@@ -9,7 +9,6 @@ contract("Cloudbric Klaytn Token Basic Test", (accounts) => {
 
     beforeEach("setup contract for each test", async() => {
         token = await CloudbricToken.new(admin, { from: owner });
-        console.log(await token.name());
     });
 
     it("contract main address should be set correctly", async() => {
@@ -120,4 +119,117 @@ contract("Cloudbric Token Transfer Test", (accounts) => {
         assert.equal(balance, 100);
     
       });
-})
+});
+
+contract("Cloudbric Token Lock/Unlock Test", (accounts) => {
+    const owner = accounts[0];
+    const admin = accounts[1];
+    const user1 = accounts[2];
+    const user2 = accounts[3];
+    const user3 = accounts[4];
+  
+  
+    let token = null;
+    let sale = null;
+  
+    beforeEach("setup contract for each test", async () => {
+      token = await CloudbricToken.new(admin, { from: owner });
+    });
+  
+    it("only onwer can lock accounts", async() => {
+      try {
+        await token.lockAccount(user1, 50, { from: user1 });
+        assert(false);
+      } catch(err) {
+        assert(err);
+      }
+  
+      await token.lockAccount(user1, 50, { from: owner });
+    });
+  
+    it("only onwer can unlock accounts", async() => {
+      await token.lockAccount(user1, 50, { from: owner });
+  
+      try {
+        await token.unlockAccount(user1, { from: user1 });
+        assert(false);
+      } catch(err) {
+        assert(err);
+      }
+  
+      await token.unlockAccount(user1, { from: owner });
+    });
+  
+    it("locked accounts can transfer tokens only less than allowed amount",
+      async () => {
+      await token.transferFrom(owner, user1, 100, {from: admin});
+      await token.transferFrom(owner, user2, 200, {from: admin});
+  
+      await token.enableTransfer({ from: owner });
+  
+      await token.lockAccount(user1, 50, { from: owner });
+      await token.lockAccount(user2, 100, { from: owner });
+  
+      try {
+        await token.transfer(user3, 60, {from: user1});
+        assert(false);
+      } catch(err) {
+        assert(err);
+      }
+  
+      await token.transfer(user3, 50, {from: user1});
+  
+      try {
+        await token.transfer(user3, 101, {from: user2});
+        assert(false);
+      } catch(err) {
+        assert(err);
+      }
+  
+      await token.transfer(user3, 100, {from: user2});
+    });
+  
+    it("locked amount can be updated", async () => {
+      await token.transferFrom(owner, user1, 100, {from: admin});
+  
+      await token.enableTransfer({ from: owner });
+      await token.lockAccount(user1, 50, { from: owner });
+  
+      try {
+        await token.transfer(user2, 60, {from: user1});
+        assert(false);
+      } catch(err) {
+        assert(err);
+      }
+  
+      await token.transfer(user2, 50, {from: user1});
+  
+      await token.lockAccount(user1, 20, { from: owner });
+  
+      try {
+        await token.transfer(user2, 40, {from: user1});
+        assert(false);
+      } catch(err) {
+        assert(err);
+      }
+  
+      await token.transfer(user2, 30, {from: user1});
+    });
+  
+    it("unlocked account can trasfer whole token", async() => {
+      await token.transferFrom(owner, user1, 100, {from: admin});
+  
+      await token.enableTransfer({ from: owner });
+      await token.lockAccount(user1, 50, { from: owner });
+  
+      try {
+        await token.transfer(user2, 60, {from: user1});
+        assert(false);
+      } catch(err) {
+        assert(err);
+      }
+  
+      await token.unlockAccount(user1, { from: owner });
+      await token.transfer(user2, 100, { from: user1 });
+    });
+});
