@@ -1,0 +1,14 @@
+{
+  "name": "cloudbric-contracts-klaytn",
+  "version": "0.0.1",
+  "description": "Smart Contracts for Cloudbric Klaytn Token",
+  "main": "truffle.js",
+  "scripts": {
+    "test": "truffle test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "caver-js": "^0.9.5"
+  }
+}
