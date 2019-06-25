@@ -70,10 +70,10 @@ contract Cloudbric is StandardToken, BurnableToken, Ownable {
         totalSupply_ = INITIAL_SUPPLY;
 
         balances[msg.sender] = totalSupply_;
-        emit Transfer(address(0x0), msg.sender, totalSupply_); // 컨트랙트 생성한 계정에 10억 * 10의 18승 (소숫점 자리수) CLB 할당
+        emit Transfer(address(0x0), msg.sender, totalSupply_);
 
         adminAddr = _adminAddr;
-        approve(adminAddr, ADMIN_ALLOWANCE); // Admin 계정에 4억 6천만 * 10의 18승 (소숫점 자리수) CLB만 허용됨.
+        approve(adminAddr, ADMIN_ALLOWANCE);
     }
 
     /*
