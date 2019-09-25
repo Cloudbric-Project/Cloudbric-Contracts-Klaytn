@@ -16,7 +16,7 @@ If you want to test our contracts using truffle, follow steps below.
 1. Install Ganache or Klaytn Baobab testnet.
    https://www.trufflesuite.com/ganache
 
-2. You should setup your own .secret.json file. check our .secret_dummy.json file.
+2. You should setup your own `.secret.json` file. check our `.secret_dummy.json` file.
 
 3. Use Truffle console to test contracts.
 
