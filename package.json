@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "caver-js": "^0.9.5"
+    "caver-js": "^0.9.5",
+    "truffle-hdwallet-provider-klaytn": "^1.0.13-a"
   }
 }
